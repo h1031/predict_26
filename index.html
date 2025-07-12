@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fantasy Predictions - College Draft</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.4/tabletop.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+    h1 {
+      text-align: center;
+    }
+    .student-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .draft-button {
+      background: #007BFF;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .draft-button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏈 College Prediction Draft</h1>
+  <div id="students"></div>
+
+  <script>
+    const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/pubhtml';
+
+    function showInfo(data, tabletop) {
+      const container = document.getElementById('students');
+      container.innerHTML = ''; // Clear previous
+
+      data.forEach(row => {
+        if (row.Status.toLowerCase() !== 'open') return;
+
+        const div = document.createElement('div');
+        div.className = 'student-card';
+        div.innerHTML = `
+          <h3>${row['Student Name']}</h3>
+          <p><strong>Options:</strong> ${row['College Options']}</p>
+          <p><strong>Odds:</strong> ${row['Odds']}</p>
+          <button class="draft-button" onclick="draftPrediction('${row['Student Name']}')">Draft Prediction</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function draftPrediction(studentName) {
+      alert(`You drafted a prediction on: ${studentName}! (This can be connected to a database later.)`);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      Tabletop.init({
+        key: publicSpreadsheetUrl,
+        callback: showInfo,
+        simpleSheet: true
+      });
+    });
+  </script>
+</body>
+</html>
